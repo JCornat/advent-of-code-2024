@@ -1,14 +1,16 @@
-import { basename } from '@std/path';
-import { isNumber } from '@nodeteam/is-number';
+import { basename } from "@std/path";
+import { isNumber } from "@nodeteam/is-number";
 
 export async function readLines(originalPath: string): Promise<string[]> {
-  const fileBasename = basename(originalPath, '.ts');
-  const fileContent = await Deno.readTextFile(`${import.meta.dirname}/../data/${fileBasename}.txt`);
+  const fileBasename = basename(originalPath, ".ts");
+  const fileContent = await Deno.readTextFile(
+    `${import.meta.dirname}/../data/${fileBasename}.txt`,
+  );
   return convertStringMultilineToStringArray(fileContent);
 }
 
 export function convertStringMultilineToStringArray(content: string): string[] {
-  return content.split('\n')
+  return content.split("\n")
     .filter((line) => {
       return line.length > 0;
     });
@@ -26,7 +28,7 @@ interface ExtractedNumber {
 export function extractNumbers(line: string): ExtractedNumber[] {
   const res: ExtractedNumber[] = [];
   let initialIndex = NaN;
-  let currentNumber = '';
+  let currentNumber = "";
 
   function addElement(value: number, index: number): void {
     const element = {
@@ -56,7 +58,7 @@ export function extractNumbers(line: string): ExtractedNumber[] {
     if (currentNumber) {
       addElement(+currentNumber, initialIndex);
       initialIndex = NaN;
-      currentNumber = '';
+      currentNumber = "";
     }
   }
 

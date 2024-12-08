@@ -1,4 +1,4 @@
-import {readLines, extractNumbers} from './utils.ts';
+import { extractNumbers, readLines } from "./utils.ts";
 
 if (import.meta.main) {
   init()
@@ -15,13 +15,13 @@ async function init() {
 }
 
 export function solvePart1(lines: string[]) {
-  const convertedLines = lines.map((line) => extractNumbers(line))
+  const convertedLines = lines.map((line) => extractNumbers(line));
   const leftParts = convertedLines.map((numbers) => numbers[0].value).sort();
   const rightParts = convertedLines.map((numbers) => numbers[1].value).sort();
 
   const diff = leftParts.map((left, index) => {
     const right = rightParts[index];
-    return Math.abs(left - right)
+    return Math.abs(left - right);
   });
 
   return diff.reduce((sum, value) => sum + value, 0);
@@ -36,11 +36,11 @@ export function solvePart2(lines: string[]) {
       const rightPart = line[1].value;
       const count = map.get(rightPart);
       if (count) {
-        map.set(rightPart, count + 1)
+        map.set(rightPart, count + 1);
       } else {
-        map.set(rightPart, 1)
+        map.set(rightPart, 1);
       }
-    })
+    });
 
     return map;
   }
