@@ -1,4 +1,4 @@
-import { extractNumbers, readLines } from "./utils.ts";
+import { extractNumbers, readLines } from './utils.ts';
 
 if (import.meta.main) {
   init()
