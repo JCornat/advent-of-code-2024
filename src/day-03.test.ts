@@ -83,3 +83,14 @@ Deno.test('Solve Part 2', () => {
   const res = solvePart2(testValue);
   assertEquals(res, 48 + 25);
 });
+
+Deno.test('Solve Part 2', () => {
+  const testValue = [
+    "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))",
+    "don't()mul(5,5)mul(5,5)do()mul(5,5)don't()",
+    'mul(5,5)',
+  ];
+
+  const res = solvePart2(testValue);
+  assertEquals(res, 48 + 25);
+});

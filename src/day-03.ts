@@ -28,10 +28,11 @@ export function solvePart1(lines: string[]) {
 }
 
 export function solvePart2(lines: string[]) {
+  let enable = true;
+
   return lines.reduce((acc, line) => {
     const regex = /(?:mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\))/g;
     const array = [...line.matchAll(regex)];
-    let enable = true;
     let total = 0;
     for (let i = 0; i < array.length; i++) {
       const value = array[i];
