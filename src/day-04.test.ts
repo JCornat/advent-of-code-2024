@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert';
-import { addUpCoordinates, Coordinate, CoordinateGroup, getCharacter, hasXmasWord, isCoordinateValid, solvePart1, solvePart2 } from './day-04.ts';
+import { addUpCoordinates, Coordinate, CoordinateGroup, getCharacter, hasXmasShape, hasXmasWord, isCoordinateValid, solvePart1, solvePart2 } from './day-04.ts';
 
 Deno.test('Solve Part 1 - Coordinate Valid', () => {
   const matrix = [
@@ -164,4 +164,46 @@ Deno.test('Solve Part 1 - Simple', () => {
 
   const res = solvePart1(testValue);
   assertEquals(res, 18);
+});
+
+Deno.test('Solve Part 2 - hasXmasShape - valid', () => {
+  const matrix = [
+    'M.S',
+    '.A.',
+    'M.S',
+  ];
+
+  const coordinate = [1, 1] satisfies Coordinate;
+  const res = hasXmasShape(matrix, coordinate);
+  assertEquals(res, true);
+});
+
+Deno.test('Solve Part 2 - hasXmasShape - invalid', () => {
+  const matrix = [
+    'M.S',
+    '.A.',
+    'S.M',
+  ];
+
+  const coordinate = [1, 1] satisfies Coordinate;
+  const res = hasXmasShape(matrix, coordinate);
+  assertEquals(res, false);
+});
+
+Deno.test('Solve Part 2 - hasXmasShape - test', () => {
+  const matrix = [
+    '.M.S......',
+    '..A..MSMS.',
+    '.M.S.MAA..',
+    '..A.ASMSM.',
+    '.M.S.M....',
+    '..........',
+    'S.S.S.S.S.',
+    '.A.A.A.A..',
+    'M.M.M.M.M.',
+    '..........',
+  ];
+
+  const res = solvePart2(matrix);
+  assertEquals(res, 9);
 });

@@ -81,8 +81,7 @@ export function isCoordinateValid(coordinate: Coordinate, matrix: string[]): boo
   return true;
 }
 
-export function solvePart1(lines: string[]) {
-  const matrix = lines;
+export function solvePart1(matrix: string[]) {
   const coordinateGroupList = getPossibleCoordinateGroupList();
 
   return matrix.map((line, y) => {
@@ -94,6 +93,39 @@ export function solvePart1(lines: string[]) {
   }).reduce((acc, value) => acc + value, 0);
 }
 
-export function solvePart2(lines: string[]) {
-  return 0;
+export function hasXmasShape(matrix: string[], currentCoordinate: Coordinate): boolean {
+  const letter = getCharacter(currentCoordinate, matrix);
+  const expectedFirstLetter = 'A';
+  if (letter !== expectedFirstLetter) {
+    return false;
+  }
+
+  const xShapeCoordinateGroup = [[1, -1], [1, 1], [-1, -1], [-1, 1]] satisfies CoordinateGroup;
+  const detectedLetters = [];
+  for (const lookUpCoordinate of xShapeCoordinateGroup) {
+    const coordinate = addUpCoordinates(currentCoordinate, lookUpCoordinate);
+    const letter = getCharacter(coordinate, matrix);
+    if (letter === null) {
+      return false;
+    }
+
+    if (letter !== 'M' && letter !== 'S') {
+      return false;
+    }
+
+    detectedLetters.push(letter);
+  }
+
+  const allowedCombinations = ['MMSS', 'SSMM', 'MSMS', 'SMSM'];
+  const tmp = detectedLetters.join('');
+  return allowedCombinations.includes(tmp);
+}
+
+export function solvePart2(matrix: string[]) {
+  return matrix.map((line, y) => {
+    return [...line].map((_char, x) => {
+      const currentCoordinate = [x, y] satisfies Coordinate;
+      return hasXmasShape(matrix, currentCoordinate);
+    }).reduce((acc, value) => value ? acc + 1 : acc, 0);
+  }).reduce((acc, value) => acc + value, 0);
 }
