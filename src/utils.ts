@@ -3,17 +3,17 @@ import { isNumber } from '@nodeteam/is-number';
 
 export async function readLines(originalPath: string): Promise<string[]> {
   const fileBasename = basename(originalPath, '.ts');
-  const fileContent = await Deno.readTextFile(
-    `${import.meta.dirname}/../data/${fileBasename}.txt`,
-  );
+  const fileContent = await Deno.readTextFile(`${import.meta.dirname}/../data/${fileBasename}.txt`);
   return convertStringMultilineToStringArray(fileContent);
 }
 
 export function convertStringMultilineToStringArray(content: string): string[] {
-  return content.split('\n')
-    .filter((line) => {
-      return line.length > 0;
-    });
+  const lines = content.split('\n');
+  if (lines[lines.length - 1] === '') {
+    lines.splice(-1, 1); // Remove last line if empty
+  }
+
+  return lines;
 }
 
 export function isNaN(value: unknown): boolean {
