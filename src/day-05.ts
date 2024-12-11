@@ -1,4 +1,4 @@
-import { extractNumbers, readLines } from './utils.ts';
+import { readLines } from './utils.ts';
 
 if (import.meta.main) {
   init()
@@ -17,17 +17,37 @@ async function init() {
 export function solvePart1(lines: string[]) {
   const splitIndex = lines.indexOf('');
   const rules = lines.slice(0, splitIndex).map((line) => line.split('|').map((x) => +x));
-  const z = buildMaps(rules);
+  const maps = buildMaps(rules);
 
   const updates = lines.slice(splitIndex).filter((value) => value !== '').map((line) => line.split(',').map((x) => +x));
   let total = 0;
   for (const update of updates) {
-    const isValid = isInRightOrder(update, z.shallBeBefore, z.shallBeAfter);
+    const isValid = isInRightOrder(update, maps.shallBeBefore, maps.shallBeAfter);
     if (!isValid) {
       continue;
     }
 
     total += getMiddle(update);
+  }
+
+  return total;
+}
+
+export function solvePart2(lines: string[]) {
+  const splitIndex = lines.indexOf('');
+  const rules = lines.slice(0, splitIndex).map((line) => line.split('|').map((x) => +x));
+  const maps = buildMaps(rules);
+
+  const updates = lines.slice(splitIndex).filter((value) => value !== '').map((line) => line.split(',').map((x) => +x));
+  let total = 0;
+  for (const update of updates) {
+    const isValid = isInRightOrder(update, maps.shallBeBefore, maps.shallBeAfter);
+    if (isValid) {
+      continue;
+    }
+
+    const correctedUpdate = correctUpdate(update, maps.shallBeBefore, maps.shallBeAfter);
+    total += getMiddle(correctedUpdate);
   }
 
   return total;
@@ -64,7 +84,7 @@ export function isInRightOrder(updates: number[], shallBeBefore: Map<number, num
           continue;
         }
 
-        if (updates.indexOf(x) < i) {
+        if (index < i) {
           return false;
         }
       }
@@ -78,7 +98,7 @@ export function isInRightOrder(updates: number[], shallBeBefore: Map<number, num
           continue;
         }
 
-        if (updates.indexOf(x) > i) {
+        if (index > i) {
           return false;
         }
       }
@@ -88,11 +108,70 @@ export function isInRightOrder(updates: number[], shallBeBefore: Map<number, num
   return true;
 }
 
+export function correctUpdate(originalUpdates: number[], shallBeBefore: Map<number, number[]>, shallBeAfter: Map<number, number[]>): number[] {
+  let iteration = 0;
+  const updates = [...originalUpdates];
+
+  while (iteration < 1000) {
+    iteration++;
+    let restart = false;
+
+    for (let i = 0; i < updates.length; i++) {
+      const currentNumber = updates[i];
+      const expectedBefore = shallBeBefore.get(currentNumber);
+      if (expectedBefore) {
+        for (const numberBefore of expectedBefore) {
+          const index = updates.indexOf(numberBefore);
+          if (index === -1) {
+            continue;
+          }
+
+          if (index < i) {
+            swapElements(updates, index, i);
+            restart = true;
+          }
+        }
+      }
+
+      if (restart) {
+        break;
+      }
+
+      const expectedAfter = shallBeAfter.get(currentNumber);
+      if (expectedAfter) {
+        for (const numberAfter of expectedAfter) {
+          const index = updates.indexOf(numberAfter);
+          if (index === -1) {
+            continue;
+          }
+
+          if (index > i) {
+            swapElements(updates, index, i);
+            restart = true;
+          }
+        }
+      }
+
+      if (restart) {
+        break;
+      }
+    }
+
+    if (!restart) {
+      break;
+    }
+  }
+
+  return updates;
+}
+
+const swapElements = (array: number[], index1: number, index2: number): void => {
+  let temp = array[index1];
+  array[index1] = array[index2];
+  array[index2] = temp;
+};
+
 export function getMiddle(updates: number[]) {
   const middleIndex = Math.floor(updates.length / 2);
   return updates[middleIndex];
-}
-
-export function solvePart2(lines: string[]) {
-  return 0;
 }
